@@ -627,7 +627,7 @@ img {vertical-align: middle;}
             // fetch("https://fromsmash.com/tif-rs-flood/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif", {
                 //     mode: "no-cors"
                 // })
-        fetch("./tiff/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif") 
+        fetch("./img/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif") 
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
             parseGeoraster(arrayBuffer).then(georaster => {
