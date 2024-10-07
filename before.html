@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>RS Flood</title>
+    <style>
+        main {
+            background-color: #06193d;
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 120px;
+            width: clamp(300px, 90%, 960px);
+            margin-inline: auto;
+            position: relative;
+        }
+
+        .twentytwenty-container {
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            z-index: 0;
+            overflow: hidden;
+            position: relative;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+        }
+
+        .twentytwenty-container img {
+            border-radius: 20px;
+            max-width: 960px;
+            max-height: 480px;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            display: block;
+        }
+
+        .twentytwenty-before {
+            z-index: 20;
+        }
+
+        .twentytwenty-after {
+            z-index: 10;
+        }
+
+        .twentytwenty-horizontal {
+            max-width: 960px;
+            margin: 0px auto;
+            max-height: 480px;
+        }
+
+        .twentytwenty-overlay {
+            max-width: 1080px;
+            -webkit-transition-property: background;
+            -moz-transition-property: background;
+            transition-property: background;
+            background: rgba(0, 0, 0, 0);
+            z-index: 25;
+        }
+
+        .twentytwenty-container * {
+            display: flex;
+            justify-content: center;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+
+        .twentytwenty-before-label, .twentytwenty-after-label, .twentytwenty-overlay {
+            -webkit-transition-duration: 0.5s;
+            -moz-transition-duration: 0.5s;
+            transition-duration: 0.5s;
+        }
+
+        .twentytwenty-before-label, .twentytwenty-after-label, .twentytwenty-overlay {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            visibility: hidden;
+        }
+
+        .twentytwenty-handle {
+            height: 38px;
+            width: 38px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -22px;
+            margin-top: -22px;
+            border: 3px solid white;
+            -webkit-border-radius: 1000px;
+            -moz-border-radius: 1000px;
+            border-radius: 1000px;
+            -webkit-box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+            -moz-box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+            box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+            z-index: 40;
+            cursor: pointer;
+        }        
+
+        .twentytwenty-left-arrow, .twentytwenty-right-arrow {
+            top: 50%;
+            margin-top: -6px;
+        }
+
+        .twentytwenty-left-arrow, .twentytwenty-right-arrow, .twentytwenty-up-arrow, .twentytwenty-down-arrow {
+            width: 0;
+            height: 0;
+            border: 6px inset transparent;
+            position: absolute;
+        }
+
+        .twentytwenty-left-arrow {
+            border-right: 6px solid white;
+            left: 50%;
+            margin-left: -17px;
+        }
+
+        .twentytwenty-right-arrow {
+            border-left: 6px solid white;
+            right: 50%;
+            margin-right: -17px;
+        }
+
+        .twentytwenty-horizontal .twentytwenty-handle:before {
+            bottom: 50%;
+            margin-bottom: 22px;
+            -webkit-box-shadow: 0 3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+            -moz-box-shadow: 0 3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+            box-shadow: 0 3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+        }
+
+        .twentytwenty-horizontal .twentytwenty-handle:after {
+            top: 50%;
+            margin-top: 22px;
+            -webkit-box-shadow: 0 -3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+            -moz-box-shadow: 0 -3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+            box-shadow: 0 -3px 0 white, 0px 0px 12px rgba(51, 51, 51, 0.5);
+        }
+
+
+        .twentytwenty-horizontal .twentytwenty-handle:before {
+            content: "a"
+        }
+
+        .twentytwenty-horizontal .twentytwenty-handle:before, .twentytwenty-horizontal .twentytwenty-handle:after, .twentytwenty-vertical .twentytwenty-handle:before, .twentytwenty-vertical .twentytwenty-handle:after {
+            content: " ";
+            display: block;
+            background: white;
+            position: absolute;
+            z-index: 30;
+            -webkit-box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+            -moz-box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+            box-shadow: 0px 0px 12px rgba(51, 51, 51, 0.5);
+        }
+
+        .twentytwenty-horizontal .twentytwenty-handle:before, .twentytwenty-horizontal .twentytwenty-handle:after {
+            width: 3px;
+            height: 9999px;
+            left: 50%;
+            margin-left: -1.5px;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Flood impact</a>
+        <a href="map.html">Map</a>
+        <a href="#" style="font-weight: bold;">Before and after</a>
+    </nav>
+
+    <main>
+        <div class="twentytwenty-wrapper twentytwenty-horizontal">
+            <div id="slider-window" class="twentytwenty-container" style="height: 356px;">
+                <img src="img/Porto Alegre flood before.jpg" alt="Flooding in Southern Brazil before" style="width: 100%; clip: rect(0px, 157.5px, 356px, 0px);" class="twentytwenty-before">
+                <img src="img/Porto Alegre flood after.jpg" alt="Flooding in Southern Brazil after" style="width: 100%;" class="twentytwenty-after">
+            <div class="twentytwenty-overlay"><div class="twentytwenty-before-label"></div><div class="twentytwenty-after-label"></div></div><div class="twentytwenty-handle" style="left: 157.5px;"><span class="twentytwenty-left-arrow"></span><span class="twentytwenty-right-arrow"></span></div></div>
+        </div>
+    </main>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.event.move.js"></script>
+    <script type="text/javascript" src="js/jquery.twenty.twenty.js"></script>
+    <script>
+        $('#slider-window').twentytwenty();
+    </script>
+</body>
+</html>

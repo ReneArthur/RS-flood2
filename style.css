@@ -1,0 +1,49 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+#map {
+    height: 600px;
+    width: 100%;
+    margin: auto;
+}
+nav {
+    position: fixed;
+    top: 0px;
+    display: flex;
+    gap: 32px;
+    padding: 30px 20px;
+    justify-content: center;
+    background-color: #2450a3;
+    border-bottom: 1px solid #fff;
+    font-size: 28px;
+    height: 40px;
+    width: 100vw;
+    z-index: 9999;
+}
+
+nav > a{
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+body{
+    background-color: #2450a3;
+}
+
+@media screen and (max-width: 768px) {
+    nav {
+        font-size: 20px;
+        height: 28px;
+        padding:30px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    nav {
+        padding: 30px 0px;
+        font-size: 18px;
+    }
+}

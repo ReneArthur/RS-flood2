@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"/>
+    <title>RS Flood</title>
+    <style>
+        main {
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 120px;
+            width: 90%;
+            margin-inline: auto;
+            position: relative;
+        }
+
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
+        .carousel-container {
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .carousel-content {
+            display: flex;
+            animation: scroll 50s linear infinite;
+            cursor: grab;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 800px;
+            height: 500px;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        section {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            place-items: center;
+            margin: 0px;
+            padding: 0px;
+            list-style-type: none;
+            opacity: 1;
+            mask-image: linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0) 0%,
+                rgb(0, 0, 0) 12.5%,
+                rgb(0, 0, 0) 87.5%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            overflow: hidden;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .carousel-dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            border-radius: 50%;
+            background-color: gray;
+            cursor: pointer;
+        }
+
+        .carousel-dot.active {
+            background-color: black;
+        }
+
+       
+
+        @media screen and (max-width: 720px) {
+            .carousel-item {
+                min-width: 100%; 
+                height: 500px; 
+                margin-right: 0; 
+            }
+
+            .carousel-content {
+                animation: none;
+            }
+
+            .carousel-button {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: rgba(255, 255, 255, 0.7);
+                border: none;
+                border-radius: 50%;
+                padding: 6px 10px;
+                cursor: pointer;
+                z-index: 10;
+            }
+
+            .carousel-button.prev {
+                left: 10px;
+            }
+
+            .carousel-button.next {
+                right: 10px;
+            }
+        }
+
+        .inner-container {
+            display: flex;
+            background-color: #f5f5f5;
+            max-width: 960px;
+            flex-direction: column;
+            align-items: center;            
+            margin-top: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 800px;
+            margin-inline: auto;
+        }
+
+        .community-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .community-paragraph {
+            text-align: justify;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" style="font-weight: bold;">Flood impact</a>
+        <a href="map.html">Map</a>
+        <a href="before.html">Before and after</a>
+    </nav>
+
+    <main>
+        <div class="carousel-container">
+            <button class="carousel-button prev">&lt;</button>
+            <div class="carousel-content">
+                <div class="carousel-item">
+                    <img alt="Flooded airport" src="img/aeroporto.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Deceased cows in flood" src="img/animais.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="A boat traveling on a flooded road" src="img/barco.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Firefighters in a lifeboat" src="img/bombeiros.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Army managing donations" src="img/doacoes.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Man climbing the gate above the water" src="img/escalada.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Dog swimming" src="img/humaita.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Woman being examined in a temporary shelter" src="img/medicos.jpg">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Rescue" src="img/resgate.webp">
+                </div>
+                <div class="carousel-item">
+                    <img alt="Army saving a dog" src="img/resgateCachorro.jpg">
+                </div>
+            </div>
+            <button class="carousel-button next">&gt;</button> 
+        </div>
+
+        <div class="about-project-container">
+            <div class="inner-container">
+                <h2 class="community-title">About Our Community</h2>
+                <p class="community-paragraph">
+                    The heavy rains that began on April 27 in Caxias do Sul, in the Vales region, persisted for more than ten days without respite. This period of intense precipitation led to the overflow of the Taquari, Caí, Pardo, Jacuí, Sinos, and Gravataí river basins, causing widespread flooding in several cities. The water invaded urban and rural areas, causing significant material losses and, tragically, loss of human lives. After crossing the Serra and the Vales, the floods advanced towards the Metropolitan Region, severely affecting cities like Canoas and Porto Alegre. From there, the volume of water continued to flow southward, where municipalities such as São José do Norte, São Lourenço do Sul, Pelotas, and Rio Grande faced severe flooding, leaving thousands of people homeless and forcing mass evacuations.
+                </p>
+                
+                <p class="community-paragraph">
+                    During the 2024 floods in Rio Grande do Sul, it is estimated that more than 17,000 volunteers registered to help with emergency and recovery efforts. This number includes health professionals such as doctors, nurses, and psychologists, as well as many other volunteers who mobilized to provide support in various areas, experiencing a community movement never before seen in the entire state.
+                </p>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        const carouselContent = document.querySelector('.carousel-content');
+        const slides = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        
+        let currentIndex = 0;
+
+        function render() {
+            const offset = -currentIndex * slides[0].offsetWidth; // Calcule o deslocamento baseado no índice atual
+            carouselContent.style.transform = `translateX(${offset}px)`;
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function prev() {
+            currentIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1; // Loop para o final
+            render();
+        }
+
+        function next() {
+            currentIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1; // Loop para o início
+            render();
+        }
+
+        prevButton.addEventListener('click', prev);
+        nextButton.addEventListener('click', next);
+
+        render();
+    </script>
+</body>
+</html>

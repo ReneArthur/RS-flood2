@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMmtW5VnZ8TVY1d5J5D8A8gI5wK5y3Ut6WvX1b" crossorigin="anonymous">
+    <style>
+   body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
+
+    main {
+        border-radius: 12px;
+        padding: 40px;
+        margin-top: 120px;
+        width: 90%;
+        margin-inline: auto;
+        position: relative;
+
+    }
+
+    #map {
+        border-radius: 15px;
+    }
+
+    #modal {
+        background-color: #f5f5f5;
+        box-shadow: 1px 1px 18px 6px #00000047;
+        position: absolute;
+        left: 5%;
+        top: 8%;
+        width: 400px;
+        height: 550px;
+        z-index: 999;
+        border-radius: 20px 0px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    #optionsModal {
+        position: relative;
+        display: flex;
+        gap: 18px;
+        right: -110%;
+        top: 0%;
+        z-index: 999;
+    }
+
+    #optionsModal div {
+        display: flex;
+        gap: 18px;
+    }
+
+    #optionsModal div div{
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background-color: #bebebe;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+
+    #modal > a {
+        width: 70%;
+        color: #000000;
+        text-align: center;
+        position: absolute;
+        right: 15%;
+        top: 10px;
+        font-size: 24px;
+        border-radius: 15px;
+    }
+
+    #modal .modal-categories {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        /* ALTERANDO AQUI, OLHE DEPOIS */
+        margin-top: 5px;
+        padding: 0px 10px;
+    }
+
+    #modal .modal-categories > div {
+        display: flex;
+        gap: 4px;
+        background-color: #bdbdbd;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 20px;
+        text-align: center;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .invisible {
+        display: none!important;
+    }
+
+    .backToCities {
+        position: absolute;
+        left: 20px;
+        top: 4px;
+        font-size: 30px; 
+        color: #000; 
+        z-index: 999;
+        cursor: pointer; 
+        padding: 0px 9px 5px;
+        border-radius: 20px;
+        background-color: #fff;
+    }
+
+    .backToCities img {
+        width: 20px;
+    }
+
+    .modal-title--mobile{
+        display: none;
+    }
+
+    .modal-content {
+        overflow-y: auto;
+        height: 500px;
+    }
+
+    @media screen and (max-width: 920px) {
+        main {
+            margin-top: 0px!important;
+        }
+        #map{
+            height: 100vh;
+        }
+        #modal {
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top:90vh;
+            bottom: -300px;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(-0px);
+            position: absolute;
+        }
+
+        #modal.open {
+            transform: translateY(-400px);
+        }
+
+        #modal > a {
+            text-decoration: none;
+            top: 20px;
+            font-size: 20px;
+        }
+
+        #optionsModal{
+            position: absolute;
+            display: flex;
+            gap: 18px;
+            left: 0%;
+            top: -8%;
+            z-index: 999;
+        }
+
+        #modal .modal-categories {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            overflow-x: scroll;
+            margin-top: 20px;
+            scrollbar-width: thin;
+        }
+
+        #modal .modal-categories >  div {
+            width: auto;
+            flex: 0 0 auto
+        }
+
+        .backToCities {
+            background-color: none;
+        }
+
+        #modal .drag-icon {
+            width: 60px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 3px;
+            margin: 10px auto;
+        }
+
+        main {
+            position: relative;
+            overflow: hidden;
+            margin-top: 120px;
+            padding: 0px;
+            width: 100%;
+        }
+        #modal-title{
+            text-decoration: none;
+            display: none;
+        }
+
+        #modal-title-mobile{
+            margin-top: 10px;
+        }
+
+        .backToCities{
+            top: 16px!important;
+        }
+
+        .invisible-mobile{
+            display: none!important;
+        }
+
+        /* .modal-content--images{
+            margin-top: 80px;
+        } */
+
+        .modal-content--title{
+            display: none;
+        }
+
+        #modal .drag-icon {
+            width: 60px;
+            height: 6px;
+            background-color: #000;
+            border-radius: 3px;
+            margin: 10px auto;
+            cursor: pointer;
+        }
+
+        #modal .drag-bar {
+            cursor: pointer;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 24px;
+        }
+
+        .modal-content {
+            overflow-y: scroll;
+            height: 400px;
+        }
+    }
+
+    @media screen and (max-width: 580px) {
+        #modal-title-mobile{
+            font-size: 18px!important;
+        }
+
+        #optionsModal{
+            left: -15%;
+            top: -30%;
+            z-index: 999;
+            transform: scale(0.8);
+        }
+
+        #modal.open {
+            transform: translateY(-300px);
+        }
+
+        .backToCities{
+            top: 20px!important;
+        }
+
+        #modal .modal-categories{
+            padding: 0px 10px 16px;
+        }
+        #modal .modal-categories >  div {
+            font-size: 18px;
+            padding: 5px 20px;
+        }
+
+
+    }
+
+    .mySlides {
+        display: none;
+        height: 250px;
+    }
+img {vertical-align: middle;}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+.modal-content--title{
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content--title {
+    font-size: 24px;
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+}
+    .label {
+        background-color: #f5f5f5;
+        box-shadow: 1px 1px 18px 6px #00000047;
+        position: absolute;
+        right: 5%;
+        bottom: 10%;
+        width: 120px;
+        height: 40px;
+        z-index: 999;
+        border-radius: 8px;
+        padding: 16px;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .label .flood-area div {
+        height: 12px;
+        width: 12px;
+        background-color: red;
+        display: inline-block;
+        margin-right: 4px;
+        border: 1px solid black;
+    }
+    .label .flood-area p {
+        display: inline;
+    }
+
+    .modal-content{
+        scrollbar-width: thin;
+    }
+
+    .label .topography div{
+        width: 100px;
+        height: 12px;
+        border: 1px solid black;
+        background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(255,255,255,1) 100%, rgba(0,212,255,1) 100%);
+    }
+
+    .activeOption {
+        background-color: #fff!important;
+    }
+
+    .link-title {
+        text-decoration: none;
+    }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Flood impact</a>
+        <a href="#" style="font-weight: bold;">Map</a>
+        <a href="before.html">Before and after</a>
+    </nav>
+
+    <main>
+        <div id="modal">
+            <div id="optionsModal">
+                <div id="staticModals">
+                    <div id="topography"><img src="./img/map-location-pin-svgrepo-com.svg" style="width: 20px;height: 20px;">Topography</div>
+                </div>
+                <div id="dynamicModals" class="invisible invisible-mobile">
+                    <div id="geography"><img src="./img/map-location-pin-svgrepo-com.svg" style="width: 20px;height: 20px;">Geography</div>
+                    <div id="histories"><img src="./img/note-text-svgrepo-com.svg" style="width: 20px;height: 20px;">Histories</div>
+                </div>
+            </div>
+            <div class="drag-bar invisible"><div class="drag-icon"></div></div>
+            <span class="backToCities invisible" onclick="resetMarker();"><img src="./img/293664_chevron_left_icon.svg"></span> 
+            <a id="modal-title" class="link-title">CITIES</a>
+            <a id="modal-title-mobile" class="invisible"></a>
+            <div class="modal-categories">
+                <div class="category-city">
+                    <span class="category-city--number">1.</span>
+                    <div>Caxias do Sul</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">2.</span>
+                    <div>Roca Sales</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">3.</span>
+                    <div>Lajeado e Estrela</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">4.</span>
+                    <div>Montenegro</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">5.</span>
+                    <div>São Leopoldo</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">6.</span>
+                    <div>Canoas</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">7.</span>
+                    <div>Porto Alegre</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">8.</span>
+                    <div>Eldorado do Sul</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">9.</span>
+                    <div>Guaíba</div>
+                </div>
+                <div class="category-city">
+                    <span class="category-city--number">10.</span>
+                    <div>Rio Grande</div>
+                </div>
+            </div>
+            
+
+            <div class="modal-content invisible">
+                <div class="modal-content--images">
+                    <div class="slideshow-container">    
+                        <a class="prev" onclick="plusSlides(-1)">❮</a>
+                        <a class="next" onclick="plusSlides(1)">❯</a>
+                    
+                    </div>
+                        
+                    <div style="text-align:center">
+                        <span class="dot" onclick="currentSlide(1)"></span> 
+                        <span class="dot" onclick="currentSlide(2)"></span> 
+                        <span class="dot" onclick="currentSlide(3)"></span> 
+                    </div>
+                </div>
+              
+                <div class="modal-content--title"></div>
+                <div class="modal-content--body"></div>
+            </div>
+
+        </div>
+        <div class="label">
+            <div class="flood-area">
+                <div></div><p>Flooded area</p>
+            </div>
+            <div class="topography invisible">
+                <p>Topography</p><div></div>
+            </div>
+        </div>
+      
+        <div id="map">
+        
+        </div>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/georaster"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet/dist/georaster-layer-for-leaflet.min.js"></script>
+    <script>
+        let citySelected;
+        let slideIndex = 1;
+
+        historiesEl = document.getElementById("histories")
+        geographyEl = document.getElementById("geography")
+        topographyEl = document.getElementById("topography")
+
+        function adicionarTopografia(){
+
+        }
+
+        function showSlides(n, rollBack) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}    
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex-1].style.display = "block";  
+            dots[slideIndex-1].className += " active";
+
+            if(rollBack) slideIndex = 1
+        }
+
+        topographyEl.onclick = () => {
+            if(map.hasLayer(topographyLayer1)) {
+                map.removeLayer(topographyLayer1)
+                map.removeLayer(topographyLayer2)
+                map.removeLayer(topographyLayer3)
+                map.removeLayer(topographyLayer4)
+                topographyEl.style.background = "#bebebe"
+                document.querySelector(".label .topography").classList.add('invisible')
+                
+            } else {
+                topographyLayer1.addTo(map)
+                topographyLayer2.addTo(map)
+                topographyLayer3.addTo(map)
+                topographyLayer4.addTo(map)
+                document.querySelector(".label .topography").classList.remove('invisible')
+                topographyEl.style.background = "white"
+        
+            }
+        }
+
+        geographyEl.onclick = () => {
+            if(!geographyEl.classList.contains('activeOption')) {
+                geographyEl.classList.add('activeOption')
+                historiesEl.classList.remove('activeOption')
+
+                const modalContent = document.querySelector('.modal-content--body')
+                resetCarousel() 
+                slideIndex = 1
+                modalContent.innerHTML = ""
+
+                citySelected.imagesGeo.forEach((imageSrc) => {
+                const slideDiv = `
+                    <div class="mySlides">
+                    <img loading="lazy" src="${imageSrc}" style="width:100%; height:100%">
+                    </div>
+                `;
+                document.querySelector('.slideshow-container').insertAdjacentHTML('afterbegin', slideDiv);
+                });
+                
+                
+                let contentHtml = `<div style="padding: 25px;font-size: 16px;"><ul style="list-style:none">`;
+                    
+                citySelected.topics.forEach(topic => {
+                    contentHtml += `<li style="margin-bottom:16px"><strong>${topic.label}:</strong> ${topic.value}</li>`;
+                });
+                contentHtml += '</div></ul>';
+                
+                modalContent.innerHTML = contentHtml;
+
+                showSlides(1, true);
+            }
+        }
+
+
+        historiesEl.onclick = () => {
+            if(!historiesEl.classList.contains('activeOption')) {
+                historiesEl.classList.add('activeOption')
+                geographyEl.classList.remove('activeOption')
+
+                resetCarousel()
+                const modalContent = document.querySelector('.modal-content--body')
+
+                modalContent.innerHTML = ""
+
+
+                citySelected.images.forEach((imageSrc) => {
+                const slideDiv = `
+                    <div class="mySlides">
+                    <img loading="lazy" src="${imageSrc}" style="width:100%; height:100%">
+                    </div>
+                `;
+                document.querySelector('.slideshow-container').insertAdjacentHTML('afterbegin', slideDiv);
+                });
+
+                modalContent.innerHTML =`<div style="padding: 0px 20px;margin-top: 20px;">${citySelected.text}</div>`
+
+                showSlides(1, true);
+            }
+        }
+
+
+        var map = L.map('map', {
+            maxBoundsViscosity: 1.0, 
+        }).setView([-30.0, -51.2], 10); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let floodLayer;
+        let topographyLayer;
+
+        // fetch("https://cgmmar.com.br/tiffs/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif", {
+            // fetch("https://fromsmash.com/tif-rs-flood/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif", {
+                //     mode: "no-cors"
+                // })
+        fetch("./tiff/OPERA_DSWx_HLS_20240506-20240421_FloodMap.tif") 
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            parseGeoraster(arrayBuffer).then(georaster => {
+                var layer = new GeoRasterLayer({
+                    georaster: georaster,
+                    opacity: 0.65,
+                    pixelValuesToColorFn: values => {
+                        if(values[0] === 1) {
+                            return "red"
+                        }
+                    },
+                    resolution: 256 
+                });
+                floodLayer = layer
+                floodLayer.addTo(map);
+            });
+        });
+
+        // fetch("./tiff/brazil south topography.tif")
+        // fetch("https://cgmmar.com.br/tiffs/brazil%20south%20topography.tif", 
+        // fetch("https://fromsmash.com/tif-rs-flood/brazil%20south%20topography.tif", 
+        fetch("./img/q1.tif")
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            parseGeoraster(arrayBuffer).then(georaster => {
+                const layer = new GeoRasterLayer({
+                    georaster: georaster,
+                    opacity: 0.6,
+                    pixelValuesToColorFn: values => {
+                        if(values[0] < 20) {
+                            return
+                        }
+                        return `rgb(${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)})`
+                    },
+                    resolution: 128
+                });
+                topographyLayer1 = layer
+            });
+        });
+        
+        fetch("./img/q2.tif")
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            parseGeoraster(arrayBuffer).then(georaster => {
+                const layer = new GeoRasterLayer({
+                    georaster: georaster,
+                    opacity: 0.6,
+                    pixelValuesToColorFn: values => {
+                        if(values[0] < 20) {
+                            return
+                        }
+                        return `rgb(${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)})`
+                    },
+                    resolution: 128
+                });
+                topographyLayer2 = layer
+            });
+        });
+        
+        fetch("./img/q3.tif")
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            parseGeoraster(arrayBuffer).then(georaster => {
+                const layer = new GeoRasterLayer({
+                    georaster: georaster,
+                    opacity: 0.6,
+                    pixelValuesToColorFn: values => {
+                        if(values[0] < 20) {
+                            return
+                        }
+                        return `rgb(${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)})`
+                    },
+                    resolution: 128
+                });
+                topographyLayer3 = layer
+            });
+        });
+        
+        fetch("./img/q4.tif")
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            parseGeoraster(arrayBuffer).then(georaster => {
+                const layer = new GeoRasterLayer({
+                    georaster: georaster,
+                    opacity: 0.6,
+                    pixelValuesToColorFn: values => {
+                        if(values[0] < 20) {
+                            return
+                        }
+                        return `rgb(${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)}, ${255-parseInt(255*values[0]/891)})`
+                    },
+                    resolution: 128
+                });
+                topographyLayer4 = layer
+            });
+        });
+        
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n, false);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n, false);
+        }
+
+        function changeMarker(cidade){
+            document.querySelector('.modal-content--title').innerHTML = `${cidade.numb}. ${cidade.nome}`
+
+            geographyEl.classList.remove('activeOption')
+            historiesEl.classList.add('activeOption')
+
+            const slideshowContainer = document.querySelector('.slideshow-container')
+            
+            const getCity= cidades.find((city)=>{
+                return city.nome === cidade.nome
+            })
+
+            document.getElementById('modal-title-mobile').innerHTML = `${cidade.numb}. ${cidade.nome}`
+
+            getCity.images.forEach((imageSrc) => {
+                const slideDiv = `
+                    <div class="mySlides">
+                    <img loading="lazy" src="${imageSrc}" style="width:100%; height:100%">
+                    </div>
+                `;
+                slideshowContainer.insertAdjacentHTML('afterbegin', slideDiv);
+            });
+
+            citySelected = getCity
+            
+            const modalContent = document.querySelector('.modal-content--body')
+            modalContent.innerHTML = `<div style="padding: 0px 20px;margin-top: 20px;">${cidade.text}</div>`;
+
+            showSlides(slideIndex, true);
+
+            map.setView(cidade.coords, 12);
+
+            document.querySelector('.modal-categories').classList.add('invisible')
+            document.querySelector('#modal-title').classList.add('invisible')
+            document.getElementById('modal-title-mobile').classList.remove('invisible')
+            document.querySelector('.backToCities').classList.remove('invisible')
+            document.getElementById('dynamicModals').classList.remove('invisible')
+            document.querySelector('.drag-bar').classList.remove('invisible')
+            document.querySelector('.modal-content').classList.remove('invisible')            
+        }
+
+        function toggleDrawer(toBack){
+            const modal = document.getElementById('modal');
+            if(modal.classList.contains('open') || toBack){
+                modal.classList.remove('open');
+                    document.getElementById('dynamicModals').classList.add('invisible-mobile')
+            }else{
+                setTimeout(()=>{
+                    document.getElementById('dynamicModals').classList.remove('invisible-mobile')
+                },200)
+
+                modal.classList.add('open');
+            }
+        }
+
+        document.querySelector('.drag-bar').addEventListener('mousedown',()=>{
+            toggleDrawer(false)
+        })
+        
+        function resetCarousel(){
+            const slides = document.querySelector('.slideshow-container').querySelectorAll('.mySlides');
+            slides.forEach(slide => {slide.remove()});
+        }
+
+        function resetMarker(){
+            document.querySelector('.backToCities').classList.add('invisible')
+            document.querySelector('.drag-bar').classList.add('invisible')
+            document.getElementById('modal-title-mobile').classList.add('invisible')
+
+            document.getElementById('dynamicModals').classList.add('invisible')
+            document.querySelector('#modal-title').classList.remove('invisible')
+
+            resetCarousel()
+            document.querySelector('.modal-content--body').innerHTML=''
+            
+    
+            map.setView([-30.0, -51.2], 10);
+            toggleDrawer(true)
+            document.querySelector('.modal-categories').classList.remove('invisible')
+            document.querySelector('.modal-content').classList.add('invisible')
+            citySelected = null
+        }
+
+        const cidades = [
+    {
+        numb: 7,
+        nome: "Porto Alegre",
+        coords: [-30.0166, -51.2007],
+        images: ['./img/animais.webp', './img/barco.webp', './img/poaEnchente2.avif', './img/poaEnchente3.avif',
+                 './img/poaEnchente4.avif', './img/poaEnchente5.webp', './img/poaEnchente6.webp', './img/poaEnchente7.webp'],
+        imagesGeo: ['./img/poa.webp'],
+        topics: [
+            { label: "Average altitude", value: "26 m" },
+            { label: "Minimum altitude", value: "-1 m" },
+            { label: "Máximum altitude", value: "309 m" },
+            { label: "Urban Area", value: "214,9087 (Km²)" }
+        ],
+        text: "The state capital did not escape the force of the waters. During the 2024 floods, about 151,000 people were affected. The city saw the solidarity of its population manifest. The Civil Defense alone had more than 2,000 volunteers in its logistics center. The volunteer registration form, conducted by the government, received more than 10,000 responses. More than 5,000 donations were collected, and over 15 temporary shelters were set up."
+    },
+    {
+        numb: 5,
+        nome: "São Leopoldo",
+        coords: [-29.8035, -51.1467],
+        images: ['./img/saoLeopoldoEnchente.webp', './img/saoLeopoldoEnchente2.webp', './img/saoLeopoldoEnchente3.webp'],
+        imagesGeo: ['./img/saoleopoldo1.webp'],
+        topics: [
+            { label: "Average altitude", value: "31 m" },
+            { label: "Minimum altitude", value: "0 m" },
+            { label: "Máximum altitude", value: "298 m" },
+            { label: "Urban Area", value: "49,9226 (Km²)" }
+        ],
+        text: "Next, São Leopoldo, located on the banks of the Sinos River, also suffered greatly. With approximately 84,000 people affected during the floods, the city saw its community mobilize en masse. About 400 volunteers offered support on all fronts, from rescue to food distribution. More than 2,000 donations were collected, and 8 temporary shelters were set up."
+    },
+    {
+        numb: 6,
+        nome: "Canoas",
+        coords: [-29.9004, -51.1963],
+        images: ['./img/canoasEnchente.webp', './img/canoasEnchente2.webp', './img/canoasEnchente3.webp', './img/canoasEnchente4.webp', "./img/canoasEnchente5.avif"],
+        imagesGeo: ['./img/canoas.webp'],
+        topics: [
+            { label: "Average altitude", value: "12 m" },
+            { label: "Minimum altitude", value: "-1 m" },
+            { label: "Máximum altitude", value: "71 m" },
+            { label: "Urban Area", value: "74,4304 (Km²)" }
+        ],
+        text: "Canoas, situated just 20 meters above sea level and near the Guaíba basin, was one of the cities most affected by the 2024 floods. With 44% of the population impacted, the city’s response was remarkable. About 800 local volunteers came together to support emergency and recovery efforts, demonstrating a strong sense of solidarity and unity."
+    },
+    {
+        numb: 8,
+        nome: "Eldorado do Sul",
+        coords: [-30.0000, -51.310],
+        images: ['./img/eldoradoEnchente.webp', './img/eldoradoEnchente2.webp', './img/eldoradoEnchente3.webp'],
+        imagesGeo: ['./img/eldorado.webp'],
+        topics: [
+            { label: "Average altitude", value: "28 m" },
+            { label: "Minimum altitude", value: "-1 m" },
+            { label: "Máximum altitude", value: "308 m" },
+            { label: "Urban Area", value: "24,0114 (Km²)" }
+        ],
+        text: "Eldorado do Sul, with its low altitude of just 5 meters and located on the banks of Lake Guaíba, became especially vulnerable during the floods. The city was completely submerged and recorded 31,000 people affected. The community united, collecting more than 300 donations and establishing 2 temporary shelters. Solidarity networks also expanded beyond the city’s limits. Eldorado do Sul received support from neighboring cities and non-governmental organizations that sent supplies and volunteers to help with recovery."
+    },
+    {
+        numb: 9,
+        nome: "Guaíba",
+        coords: [-30.09020, -51.3250000],
+        images: ['./img/guaibaEnchente.webp', './img/guaibaEnchente2.webp'],
+        imagesGeo: ['./img/guaiba.webp'],
+        topics: [
+            { label: "Average altitude", value: "22 m" },
+            { label: "Minimum altitude", value: "-1 m" },
+            { label: "Maximum altitude", value: "264 m" },
+            { label: "Urban Area", value: "22,6015 (Km²)" }
+        ],
+        text: "Guaíba, also affected by low altitude and flat geography, saw its population suffer from the floods, which resulted in 21,000 people affected. The spirit of solidarity was present, with approximately 150 local volunteers mobilizing to offer support to families."
+    },
+    {
+        numb: 1,
+        nome: "Caxias do Sul",
+        coords: [-29.1678, -51.1794],
+        images: ['./img/caxiasDeslizamento.webp', './img/caxiasDeslizamento2.webp', './img/caxiasDeslizamento3.webp'],
+        imagesGeo: ['./img/caxias.webp'],
+        topics: [
+            { label: "Average altitude", value: "641 m" },
+            { label: "Minimum altitude", value: "55 m" },
+            { label: "Máximum altitude", value: "977 m" },
+            { label: "Urban Area", value: "104,7056 (Km²)" }
+        ],
+        text: "The heavy rains of 2024 exposed the vulnerability of several cities in the region, including Caxias do Sul, located in the Serra Gaúcha at about 641 meters above sea level. The mountainous geography caused rapid water runoff, severely affecting the city and neighboring areas. Caxias registered around 400 displaced people. The solidarity of the population was remarkable, with more than 1,000 donations of food and clothing, and 5 temporary shelters established to accommodate those affected."
+    },
+    {
+        numb: 2,
+        nome: "Roca Sales",
+        coords: [-29.2836, -51.8657],
+        images: ["./img/rocasalesEnchente.webp", "./img/rocasalesEnchente2.webp", "./img/rocasalesEnchente3.webp"],
+        imagesGeo: ['./img/roca.webp'],
+        topics: [
+            { label: "Average altitude", value: "254 m" },
+            { label: "Minimum altitude", value: "25 m" },
+            { label: "Máximum altitude", value: "608 m" },
+            { label: "Urban Area", value: "3,8368 (Km²)" }
+        ],
+        text: "Next, Roca Sales, situated along the Taquari River, faced the devastating effects of the 2024 floods. Located after a bend in the river, the city experienced a water buildup that resulted in one of the worst floods in its history. With around 500 displaced people and 36% of the population affected, the community mobilized impressively."
+    },
+    {
+        numb: 3,
+        nome: "Lajeado e Estrela",
+        coords: [-29.4597, -51.9644],
+        images: ['./img/lajeadoEstrela.webp', './img/lajeadoEstrela2.webp'],
+        imagesGeo:['./img/lajeado.webp'],
+        topics: [
+            { label: "Average altitude", value: "65 m" },
+            { label: "Minimum altitude", value: "11 m" },
+            { label: "Máximum altitude", value: "473 m" },
+            { label: "Urban Area", value: "36,0654 (Km²)" }
+        ],
+        text: "Nearby, Lajeado and Estrela, both crossed by the Taquari River, also suffered from the floods. Together, the cities accounted for about 35,000 people affected by the floods. The local population demonstrated a strong spirit of solidarity, with around 300 volunteers coming together to help affected families, distributing donations and providing assistance."
+    },
+    {
+        numb: 4,
+        nome: "Montenegro",
+        coords: [-29.6828, -51.4678],
+        images: ["./img/montenegroEnchente.webp", './img/montenegroEnchente2.webp'],
+        imagesGeo: ['./img/montenegro.webp'],
+        topics: [
+            { label: "Average altitude", value: "40 m" },
+            { label: "Minimum altitude", value: "2 m" },
+            { label: "Máximum altitude", value: "182 m" },
+            { label: "Urban Area", value: "81,1868 (Km²)" }
+        ],
+        text: "Montenegro, located in the Vale do Caí, saw its rivers overflow, affecting about 19,000 people during the floods. The city witnessed community mobilization, with local organizations coming together to collect and distribute more than 2,500 donations of food and clothing."
+    },
+];
+
+
+
+        const cityElements = document.querySelectorAll('.category-city');
+        
+        cityElements.forEach((element) => {
+            element.addEventListener('click', (e) => {
+                const getCity = cidades.find((cidade) => {
+                    console.log(e.currentTarget)
+                    return cidade.nome == e.currentTarget.children[1].textContent;
+                });
+                changeMarker(getCity)
+            });
+        });
+
+        cidades.forEach(cidade => {
+            const marker = L.marker(cidade.coords).addTo(map)
+                .bindPopup(cidade.nome)
+                .on('click', () => {
+                    changeMarker(cidade)
+                });
+        });
+    </script>
+</body>
+</html>
